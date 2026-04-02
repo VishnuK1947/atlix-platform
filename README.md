@@ -1,3 +1,4 @@
 # atlix-platform
 
-cd demo                                                                                                                                                       npm run dev 
+cd demo                                                                                                                                                       
+npm run dev 
