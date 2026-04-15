@@ -65,7 +65,6 @@ export default function NarrativeDetail({
             positive={narrative.sentiment.positive}
             neutral={narrative.sentiment.neutral}
             negative={narrative.sentiment.negative}
-            showLabels
           />
           <div className="flex gap-2 mt-4 flex-wrap">
             {narrative.emotions.map((e) => (
