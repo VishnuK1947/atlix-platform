@@ -2,7 +2,7 @@
 
 **Version:** 0.1 (First Pass)
 **Last Updated:** March 30, 2026
-**Authors:** Jef Yang, Vishnu, David, Margaret, Kirtisub, Eric
+**Authors:** Vishnu, David, Margaret, Kirtisub, Eric
 
 ---
 
