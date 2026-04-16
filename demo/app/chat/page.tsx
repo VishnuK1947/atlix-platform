@@ -58,7 +58,7 @@ export default function ChatPage() {
       <main className="flex-1 flex flex-col max-w-3xl mx-auto w-full px-4 py-6">
         <div className="mb-6">
           <h1 className="text-base font-semibold text-white">Ask Atlix</h1>
-          <p className="text-xs text-[#555] mt-0.5">
+          <p className="text-xs text-[#5a5e72] mt-0.5">
             Ask anything about public discourse in Los Angeles
           </p>
         </div>
@@ -67,13 +67,13 @@ export default function ChatPage() {
         <div className="flex-1 flex flex-col gap-4 mb-6 min-h-0 overflow-y-auto">
           {messages.length === 0 && (
             <div className="flex flex-col gap-3">
-              <p className="text-sm text-[#555]">Try asking:</p>
+              <p className="text-sm text-[#5a5e72]">Try asking:</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {SUGGESTIONS.map((s) => (
                   <button
                     key={s}
                     onClick={() => submit(s)}
-                    className="text-left text-sm text-[#888] bg-[#141414] border border-[#242424] rounded-xl px-4 py-3 hover:border-[#3b82f6]/40 hover:text-white transition-colors"
+                    className="text-left text-sm text-[#8b8fa5] bg-[#0f1117] border border-[#1e2132] rounded-xl px-4 py-3 hover:border-[#f0a830]/40 hover:text-white transition-colors"
                   >
                     {s}
                   </button>
@@ -90,12 +90,12 @@ export default function ChatPage() {
               }`}
             >
               {msg.role === "user" ? (
-                <div className="bg-[#1e1e1e] border border-[#2a2a2a] rounded-2xl rounded-tr-sm px-4 py-3 text-sm text-white max-w-lg">
+                <div className="bg-[#1a1c28] border border-[#252839] rounded-2xl rounded-tr-sm px-4 py-3 text-sm text-white max-w-lg">
                   {msg.text}
                 </div>
               ) : (
-                <div className="bg-[#141414] border border-[#242424] rounded-2xl rounded-tl-sm px-5 py-4 max-w-2xl w-full">
-                  <p className="text-sm text-[#ccc] leading-relaxed mb-3">
+                <div className="bg-[#0f1117] border border-[#1e2132] rounded-2xl rounded-tl-sm px-5 py-4 max-w-2xl w-full">
+                  <p className="text-sm text-[#c8cad8] leading-relaxed mb-3">
                     {msg.text}
                   </p>
                   {msg.citations && (
@@ -103,7 +103,7 @@ export default function ChatPage() {
                       {msg.citations.map((c) => (
                         <span
                           key={c}
-                          className="text-xs text-[#3b82f6] bg-[#3b82f6]/10 border border-[#3b82f6]/20 rounded-full px-2.5 py-0.5"
+                          className="text-xs text-[#f0a830] bg-[#f0a830]/10 border border-[#f0a830]/20 rounded-full px-2.5 py-0.5"
                         >
                           {c}
                         </span>
@@ -117,11 +117,11 @@ export default function ChatPage() {
 
           {loading && (
             <div className="flex items-start">
-              <div className="bg-[#141414] border border-[#242424] rounded-2xl rounded-tl-sm px-5 py-4">
+              <div className="bg-[#0f1117] border border-[#1e2132] rounded-2xl rounded-tl-sm px-5 py-4">
                 <div className="flex gap-1.5 items-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#3b82f6] animate-bounce [animation-delay:0ms]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#3b82f6] animate-bounce [animation-delay:150ms]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#3b82f6] animate-bounce [animation-delay:300ms]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#f0a830] animate-bounce [animation-delay:0ms]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#f0a830] animate-bounce [animation-delay:150ms]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#f0a830] animate-bounce [animation-delay:300ms]" />
                 </div>
               </div>
             </div>
@@ -136,10 +136,10 @@ export default function ChatPage() {
             e.preventDefault();
             submit(input);
           }}
-          className="flex gap-2 items-center bg-[#141414] border border-[#242424] rounded-2xl px-4 py-3 focus-within:border-[#3b82f6]/50 transition-colors"
+          className="flex gap-2 items-center bg-[#0f1117] border border-[#1e2132] rounded-2xl px-4 py-3 focus-within:border-[#f0a830]/50 transition-colors"
         >
           <input
-            className="flex-1 bg-transparent text-sm text-white placeholder-[#555] outline-none"
+            className="flex-1 bg-transparent text-sm text-white placeholder-[#5a5e72] outline-none"
             placeholder="Ask anything about LA public discourse..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
@@ -147,7 +147,7 @@ export default function ChatPage() {
           <button
             type="submit"
             disabled={!input.trim() || loading}
-            className="text-xs font-medium text-[#3b82f6] disabled:text-[#333] transition-colors px-2"
+            className="text-xs font-medium text-[#f0a830] disabled:text-[#2a2d3e] transition-colors px-2"
           >
             Send
           </button>

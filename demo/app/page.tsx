@@ -56,16 +56,16 @@ export default function Dashboard() {
       <Header />
       <div className="flex flex-1">
         {/* Sidebar */}
-        <aside className="w-56 border-r border-[#242424] p-4 shrink-0 hidden lg:block">
-          <p className="text-xs text-[#555] uppercase tracking-widest mb-3">Topics</p>
+        <aside className="w-56 border-r border-[#d4e4d4] p-4 shrink-0 hidden lg:block">
+          <p className="text-xs text-[#5c7a5c] uppercase tracking-widest mb-3">Topics</p>
           <div className="flex flex-col gap-0.5">
             {categories.map((cat, i) => (
               <button
                 key={cat}
                 className={`text-left text-sm px-3 py-2 rounded-md transition-colors ${
                   i === 0
-                    ? "bg-[#1e1e1e] text-white"
-                    : "text-[#888] hover:text-white hover:bg-[#1a1a1a]"
+                    ? "bg-[#e8f5e8] text-[#15803d] font-medium"
+                    : "text-[#4a6a4a] hover:text-[#1a2e1a] hover:bg-[#f0f7f0]"
                 }`}
               >
                 {cat}
@@ -73,15 +73,15 @@ export default function Dashboard() {
             ))}
           </div>
 
-          <p className="text-xs text-[#555] uppercase tracking-widest mt-6 mb-3">Sentiment</p>
+          <p className="text-xs text-[#5c7a5c] uppercase tracking-widest mt-6 mb-3">Sentiment</p>
           <div className="flex flex-col gap-0.5">
             {["All", "Positive", "Negative", "Mixed"].map((s, i) => (
               <button
                 key={s}
                 className={`text-left text-sm px-3 py-2 rounded-md transition-colors ${
                   i === 0
-                    ? "bg-[#1e1e1e] text-white"
-                    : "text-[#888] hover:text-white hover:bg-[#1a1a1a]"
+                    ? "bg-[#e8f5e8] text-[#15803d] font-medium"
+                    : "text-[#4a6a4a] hover:text-[#1a2e1a] hover:bg-[#f0f7f0]"
                 }`}
               >
                 {s}
@@ -89,15 +89,15 @@ export default function Dashboard() {
             ))}
           </div>
 
-          <p className="text-xs text-[#555] uppercase tracking-widest mt-6 mb-3">Sources</p>
+          <p className="text-xs text-[#5c7a5c] uppercase tracking-widest mt-6 mb-3">Sources</p>
           <div className="flex flex-col gap-0.5">
             {["All", "Reddit", "X", "News"].map((s, i) => (
               <button
                 key={s}
                 className={`text-left text-sm px-3 py-2 rounded-md transition-colors ${
                   i === 0
-                    ? "bg-[#1e1e1e] text-white"
-                    : "text-[#888] hover:text-white hover:bg-[#1a1a1a]"
+                    ? "bg-[#e8f5e8] text-[#15803d] font-medium"
+                    : "text-[#4a6a4a] hover:text-[#1a2e1a] hover:bg-[#f0f7f0]"
                 }`}
               >
                 {s}
@@ -111,19 +111,19 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-base font-semibold text-white">Narrative Feed</h1>
-              <p className="text-xs text-[#555] mt-0.5">
+              <p className="text-xs text-[#5c7a5c] mt-0.5">
                 {narratives.length} active narratives · Updated just now
               </p>
             </div>
             <div className="flex items-center gap-3">
               {/* Sort selector */}
-              <div className="flex items-center gap-1 text-xs bg-[#141414] border border-[#242424] rounded-lg p-1">
+              <div className="flex items-center gap-1 text-xs bg-[#f8faf8] border border-[#d4e4d4] rounded-lg p-1">
                 {(Object.keys(sortLabels) as SortOption[]).map((key) => (
                   <button
                     key={key}
                     onClick={() => setSort(key)}
                     className={`px-2.5 py-1 rounded-md transition-colors ${
-                      sort === key ? "bg-[#2a2a2a] text-white" : "text-[#888] hover:text-white"
+                      sort === key ? "bg-white text-[#15803d] font-medium shadow-sm" : "text-[#5c7a5c] hover:text-[#1a2e1a]"
                     }`}
                   >
                     {sortLabels[key]}
@@ -131,12 +131,12 @@ export default function Dashboard() {
                 ))}
               </div>
               {/* Time range */}
-              <div className="flex items-center gap-1 text-xs bg-[#141414] border border-[#242424] rounded-lg p-1">
+              <div className="flex items-center gap-1 text-xs bg-[#f8faf8] border border-[#d4e4d4] rounded-lg p-1">
                 {["7d", "14d", "30d"].map((t, i) => (
                   <button
                     key={t}
                     className={`px-2.5 py-1 rounded-md transition-colors ${
-                      i === 0 ? "bg-[#2a2a2a] text-white" : "text-[#888] hover:text-white"
+                      i === 0 ? "bg-white text-[#15803d] font-medium shadow-sm" : "text-[#5c7a5c] hover:text-[#1a2e1a]"
                     }`}
                   >
                     {t}
