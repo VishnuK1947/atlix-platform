@@ -11,10 +11,17 @@ interface Message {
 }
 
 const SUGGESTIONS = [
-  "What are people saying about the wildfire recovery?",
-  "Tell me about LAPD overtime spending",
-  "What's the latest on the Metro expansion?",
-  "What's happening with the teacher strike?",
+  { category: "HOUSING", text: "What are 18-34 year olds saying about rent on Reddit and X?" },
+  { category: "POLITICS", text: "How are young Californians talking about politician age and representation?" },
+  { category: "MENTAL HEALTH", text: "What's the mental health access discourse across CA right now?" },
+  { category: "CIVIC ENGAGEMENT", text: "Are young Californians engaging with the 2026 primary races?" },
+];
+
+const FREQUENT = [
+  { q: "Sentiment on Newsom across young Californians this week?", count: 24 },
+  { q: "Top emotions driving the politician age discourse?", count: 18 },
+  { q: "What are CSU students saying about the LAUSD strike?", count: 14 },
+  { q: "Where is climate anxiety pushing career choices?", count: 9 },
 ];
 
 function getResponse(query: string): { answer: string; citations: string[] } {
@@ -37,121 +44,224 @@ export default function ChatPage() {
 
   async function submit(query: string) {
     if (!query.trim() || loading) return;
-    const userMsg: Message = { role: "user", text: query };
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages((prev) => [...prev, { role: "user", text: query }]);
     setInput("");
     setLoading(true);
-
-    await new Promise((r) => setTimeout(r, 3000));
-
+    await new Promise((r) => setTimeout(r, 2200));
     const { answer, citations } = getResponse(query);
-    setMessages((prev) => [
-      ...prev,
-      { role: "assistant", text: answer, citations },
-    ]);
+    setMessages((prev) => [...prev, { role: "assistant", text: answer, citations }]);
     setLoading(false);
   }
 
+  const hasMessages = messages.length > 0;
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: "var(--bg-base)" }}>
       <Header />
-      <main className="flex-1 flex flex-col max-w-3xl mx-auto w-full px-4 py-6">
-        <div className="mb-6">
-          <h1 className="text-base font-semibold text-white">Ask Atlix</h1>
-          <p className="text-xs text-[#5a5e72] mt-0.5">
-            Ask anything about public discourse in Los Angeles
+      <main className="flex-1 flex flex-col max-w-3xl mx-auto w-full px-6 py-10">
+        {/* Empty state hero */}
+        {!hasMessages && (
+          <div className="mb-10">
+            <p
+              className="text-xs font-semibold uppercase tracking-widest mb-4"
+              style={{ color: "var(--text-tertiary)" }}
+            >
+              Ask Atlix
+            </p>
+            <h1 className="text-[32px] font-semibold leading-tight mb-4" style={{ color: "var(--text-primary)" }}>
+              Ask anything about young<br />Californians on Reddit and X
+            </h1>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+              Atlix surfaces what 18–34 year old Californians are saying in English-language
+              public discourse. Confidence intervals, not point estimates.
+            </p>
+          </div>
+        )}
+
+        {/* Suggestion cards (empty state) */}
+        {!hasMessages && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+            {SUGGESTIONS.map((s) => (
+              <button
+                key={s.text}
+                onClick={() => submit(s.text)}
+                className="text-left rounded-xl p-5 transition-all group"
+                style={{
+                  background: "var(--bg-elevated)",
+                  border: "1px solid var(--border-subtle)",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-default)";
+                  (e.currentTarget as HTMLButtonElement).style.background = "var(--bg-overlay)";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLButtonElement).style.borderColor = "var(--border-subtle)";
+                  (e.currentTarget as HTMLButtonElement).style.background = "var(--bg-elevated)";
+                }}
+              >
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <p
+                    className="text-[10px] font-semibold uppercase tracking-widest"
+                    style={{ color: "var(--text-tertiary)" }}
+                  >
+                    {s.category}
+                  </p>
+                  <span style={{ color: "var(--text-tertiary)" }}>→</span>
+                </div>
+                <p className="text-sm font-medium leading-snug" style={{ color: "var(--text-primary)" }}>
+                  {s.text}
+                </p>
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* Message thread */}
+        {hasMessages && (
+          <div className="flex-1 flex flex-col gap-4 mb-6 overflow-y-auto">
+            {messages.map((msg, i) => (
+              <div
+                key={i}
+                className={`flex flex-col gap-2 animate-msg ${msg.role === "user" ? "items-end" : "items-start"}`}
+              >
+                {msg.role === "user" ? (
+                  <div
+                    className="px-4 py-3 rounded-2xl rounded-tr-sm text-sm max-w-lg"
+                    style={{
+                      background: "var(--bg-elevated)",
+                      border: "1px solid var(--border-default)",
+                      color: "var(--text-primary)",
+                    }}
+                  >
+                    {msg.text}
+                  </div>
+                ) : (
+                  <div
+                    className="px-5 py-4 rounded-2xl rounded-tl-sm max-w-2xl w-full"
+                    style={{
+                      background: "var(--bg-elevated)",
+                      border: "1px solid var(--border-subtle)",
+                    }}
+                  >
+                    <p className="text-sm leading-relaxed mb-3" style={{ color: "var(--text-secondary)" }}>
+                      {msg.text}
+                    </p>
+                    {msg.citations && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {msg.citations.map((c) => (
+                          <span
+                            key={c}
+                            className="text-xs px-2 py-0.5 rounded-full"
+                            style={{
+                              background: "var(--accent-cool-bg)",
+                              border: "1px solid var(--accent-cool-border)",
+                              color: "var(--accent-cool)",
+                            }}
+                          >
+                            {c}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {loading && (
+              <div className="flex items-start">
+                <div
+                  className="px-5 py-4 rounded-2xl rounded-tl-sm"
+                  style={{ background: "var(--bg-elevated)", border: "1px solid var(--border-subtle)" }}
+                >
+                  <div className="flex gap-1.5 items-center">
+                    {[0, 150, 300].map((delay) => (
+                      <span
+                        key={delay}
+                        className="w-1.5 h-1.5 rounded-full animate-bounce"
+                        style={{
+                          background: "var(--accent-cool)",
+                          animationDelay: `${delay}ms`,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div ref={bottomRef} />
+          </div>
+        )}
+
+        {/* Input */}
+        <div>
+          <form
+            onSubmit={(e) => { e.preventDefault(); submit(input); }}
+            className="flex gap-2 items-center rounded-xl px-4 py-3 transition-colors"
+            style={{
+              background: "var(--bg-input)",
+              border: "1px solid var(--border-default)",
+            }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = "var(--accent-cool)")}
+            onBlur={(e) => (e.currentTarget.style.borderColor = "var(--border-default)")}
+          >
+            <input
+              className="flex-1 bg-transparent text-sm outline-none placeholder:opacity-50"
+              style={{ color: "var(--text-primary)" }}
+              placeholder="Ask about young Californians on Reddit and X…"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            <button
+              type="submit"
+              disabled={!input.trim() || loading}
+              className="text-xs font-semibold px-4 py-2 rounded-lg transition-opacity disabled:opacity-30"
+              style={{
+                background: "var(--accent-warm)",
+                color: "var(--accent-warm-ink)",
+              }}
+            >
+              Send
+            </button>
+          </form>
+          <p className="text-xs mt-2 text-center" style={{ color: "var(--text-quat)" }}>
+            Press Enter to send · Responses synthesized from indexed sources
           </p>
         </div>
 
-        {/* Messages */}
-        <div className="flex-1 flex flex-col gap-4 mb-6 min-h-0 overflow-y-auto">
-          {messages.length === 0 && (
-            <div className="flex flex-col gap-3">
-              <p className="text-sm text-[#5a5e72]">Try asking:</p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {SUGGESTIONS.map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => submit(s)}
-                    className="text-left text-sm text-[#8b8fa5] bg-[#0f1117] border border-[#1e2132] rounded-xl px-4 py-3 hover:border-[#f0a830]/40 hover:text-white transition-colors"
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`flex flex-col gap-2 ${
-                msg.role === "user" ? "items-end" : "items-start"
-              }`}
+        {/* Frequently asked (empty state only) */}
+        {!hasMessages && (
+          <div className="mt-10">
+            <p
+              className="text-[10px] font-semibold uppercase tracking-widest mb-4"
+              style={{ color: "var(--text-tertiary)" }}
             >
-              {msg.role === "user" ? (
-                <div className="bg-[#1a1c28] border border-[#252839] rounded-2xl rounded-tr-sm px-4 py-3 text-sm text-white max-w-lg">
-                  {msg.text}
+              Frequently Asked This Week
+            </p>
+            <div className="flex flex-col">
+              {FREQUENT.map((item, i) => (
+                <div key={i}>
+                  <div
+                    className="py-3 flex items-center justify-between gap-4"
+                    style={{ borderBottom: i < FREQUENT.length - 1 ? "1px solid var(--border-subtle)" : undefined }}
+                  >
+                    <button
+                      onClick={() => submit(item.q)}
+                      className="text-sm text-left hover:opacity-70 transition-opacity"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      {item.q}
+                    </button>
+                    <span className="text-xs font-mono shrink-0" style={{ color: "var(--text-tertiary)" }}>
+                      asked {item.count} times this week
+                    </span>
+                  </div>
                 </div>
-              ) : (
-                <div className="bg-[#0f1117] border border-[#1e2132] rounded-2xl rounded-tl-sm px-5 py-4 max-w-2xl w-full">
-                  <p className="text-sm text-[#c8cad8] leading-relaxed mb-3">
-                    {msg.text}
-                  </p>
-                  {msg.citations && (
-                    <div className="flex flex-wrap gap-2">
-                      {msg.citations.map((c) => (
-                        <span
-                          key={c}
-                          className="text-xs text-[#f0a830] bg-[#f0a830]/10 border border-[#f0a830]/20 rounded-full px-2.5 py-0.5"
-                        >
-                          {c}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
+              ))}
             </div>
-          ))}
-
-          {loading && (
-            <div className="flex items-start">
-              <div className="bg-[#0f1117] border border-[#1e2132] rounded-2xl rounded-tl-sm px-5 py-4">
-                <div className="flex gap-1.5 items-center">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#f0a830] animate-bounce [animation-delay:0ms]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#f0a830] animate-bounce [animation-delay:150ms]" />
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#f0a830] animate-bounce [animation-delay:300ms]" />
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div ref={bottomRef} />
-        </div>
-
-        {/* Input */}
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            submit(input);
-          }}
-          className="flex gap-2 items-center bg-[#0f1117] border border-[#1e2132] rounded-2xl px-4 py-3 focus-within:border-[#f0a830]/50 transition-colors"
-        >
-          <input
-            className="flex-1 bg-transparent text-sm text-white placeholder-[#5a5e72] outline-none"
-            placeholder="Ask anything about LA public discourse..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-          <button
-            type="submit"
-            disabled={!input.trim() || loading}
-            className="text-xs font-medium text-[#f0a830] disabled:text-[#2a2d3e] transition-colors px-2"
-          >
-            Send
-          </button>
-        </form>
+          </div>
+        )}
       </main>
     </div>
   );

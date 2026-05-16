@@ -6,40 +6,62 @@ import { usePathname } from "next/navigation";
 export default function Header() {
   const pathname = usePathname();
 
+  const tabs = [
+    { href: "/", label: "Feed" },
+    { href: "/chat", label: "Ask" },
+    { href: "/insights", label: "Insights" },
+  ];
+
   return (
-    <header className="border-b border-[#d4e4d4] px-6 py-3 flex items-center justify-between sticky top-0 z-50 bg-[#f0f7f0]">
-      <div className="flex items-center gap-6">
-        <Link href="/" className="text-lg font-bold tracking-tight text-[#16a34a]">
-          atlix
+    <header
+      className="sticky top-0 z-50 flex items-center justify-between px-6 h-16"
+      style={{ background: "var(--bg-base)", borderBottom: "1px solid var(--border-subtle)" }}
+    >
+      {/* Left: wordmark */}
+      <div className="flex items-center">
+        <Link
+          href="/"
+          className="text-[17px] font-bold tracking-tight"
+          style={{ color: "var(--text-primary)" }}
+        >
+          Atlix
         </Link>
-        <div className="flex items-center gap-1 text-sm text-[#5c7a5c]">
-          <span className="w-2 h-2 rounded-full bg-[#22c55e] inline-block" />
-          <span>Los Angeles</span>
-        </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <nav className="flex items-center gap-1 text-sm">
-          <Link
-            href="/"
-            className={`px-3 py-1.5 rounded-md transition-colors ${
-              pathname === "/" ? "bg-[#e8f5e8] text-[#15803d] font-medium" : "text-[#5c7a5c] hover:text-[#1a2e1a] hover:bg-[#f0f7f0]"
-            }`}
-          >
-            Dashboard
-          </Link>
-          <Link
-            href="/chat"
-            className={`px-3 py-1.5 rounded-md transition-colors ${
-              pathname === "/chat" ? "bg-[#e8f5e8] text-[#15803d] font-medium" : "text-[#5c7a5c] hover:text-[#1a2e1a] hover:bg-[#f0f7f0]"
-            }`}
-          >
-            Ask Atlix
-          </Link>
-        </nav>
-        <div className="text-xs text-[#5c7a5c] border border-[#d4e4d4] rounded px-2 py-1">
-          Live · Apr 2, 2026
+      {/* Right: utility links + live + tabs */}
+      <div className="flex items-center gap-5">
+        <div className="flex items-center gap-4 text-xs" style={{ color: "var(--accent-cool)" }}>
+          <button className="hover:opacity-80 transition-opacity">Methodology ↗</button>
+          <button className="hover:opacity-80 transition-opacity">Plans ↗</button>
         </div>
+
+        <div className="flex items-center gap-1.5 text-xs" style={{ color: "var(--text-tertiary)" }}>
+          <span
+            className="w-1.5 h-1.5 rounded-full animate-live"
+            style={{ background: "var(--sentiment-pos)" }}
+          />
+          <span style={{ color: "var(--text-secondary)" }}>Live</span>
+          <span className="font-mono">· May 15, 2026</span>
+        </div>
+
+        <nav className="flex items-center gap-0.5">
+          {tabs.map(({ href, label }) => {
+            const active = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                className="px-3 py-1.5 rounded-md text-sm font-medium transition-colors"
+                style={{
+                  background: active ? "var(--bg-elevated)" : "transparent",
+                  color: active ? "var(--text-primary)" : "var(--text-tertiary)",
+                }}
+              >
+                {label}
+              </Link>
+            );
+          })}
+        </nav>
       </div>
     </header>
   );
